@@ -88,7 +88,9 @@ cd /path/to/tomcat/bin
 sh startup.sh
 ```
 
+### Server
 
+[Ubuntu](./docs/ubuntu.md)
 
 ## API Documentation
 - [API Documentation](./docs/api.md)
