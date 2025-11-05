@@ -1,0 +1,22 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# out
+out/
+target/
+
+# nodejs
+node_modules/
+package-lock.json
+
+# auto-generated
+auto-imports.d.ts
+components.d.ts
+
+# build output
+dist/
+*.local
