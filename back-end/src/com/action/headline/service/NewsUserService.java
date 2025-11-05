@@ -1,0 +1,20 @@
+package com.action.headline.service;
+
+import com.action.headline.entity.NewsUser;
+
+public interface NewsUserService {
+    /**
+     * 根据用户名查询用户信息
+     */
+    NewsUser findByUsername(String username);
+
+    /**
+     * 根据用户id查询用户信息
+     */
+    NewsUser findByUid(Integer userId);
+
+    /**
+     * 注册用户
+     */
+    Integer registerUser(NewsUser registerUser);
+}
