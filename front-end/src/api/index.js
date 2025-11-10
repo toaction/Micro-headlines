@@ -34,7 +34,7 @@ export const registerValidateApi = (username) => {
 
 // 注册的接口
 export const registerApi = (userInfo) => {
-  return request.post("users", userInfo)
+  return request.post("users/register", userInfo)
 }
 
 // 修改头条回显的接口

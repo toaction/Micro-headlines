@@ -219,7 +219,7 @@
 
 **接口功能**：注册新用户账号
 
-**URL**：`/users`
+**URL**：`/users/register`
 
 **请求方式**：POST
 
