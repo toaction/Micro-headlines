@@ -179,7 +179,7 @@ export default defineComponent({
 </script>
 
 <script setup>
-import { getfindAllTypes, isUserOverdue, registerValidateApi, registerApi } from '../api/index'
+import { getfindAllTypes, registerValidateApi, registerApi } from '../api/index'
 import { ref, onMounted , getCurrentInstance ,watch, computed} from "vue"
 import { useRouter } from 'vue-router'
 import { ArrowDown } from '@element-plus/icons-vue'
@@ -369,8 +369,16 @@ const getList = async () => {
   findAllTypeList.value = result
 }
 // 页面挂载的生命周期回调
-onMounted(() => {
+onMounted(async () => {
   getList()
+  // 如果有 token，自动获取用户信息
+  if (userInfoStore.token) {
+    try {
+      await userInfoStore.getInfo()
+    } catch (error) {
+      console.log('获取用户信息失败', error)
+    }
+  }
 })
 
 //点击切换高亮的回调(排他思想)
@@ -391,9 +399,7 @@ const Logout = () => {
 }
 
 //点击发布新闻的回调
-const handlerNews = async () => {
-  //发送请求判断用户是否token过期
-  await isUserOverdue()
+const handlerNews = () => {
   router.push({ name: "addNews" });
 }
 </script>

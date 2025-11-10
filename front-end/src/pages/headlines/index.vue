@@ -124,7 +124,7 @@
 </template>
 
 <script >
-import { getfindNewsPageInfo , removeByHid, getFindHeadlineByHid, saveOrAddNews, isUserOverdue } from "../../api/index"
+import { getfindNewsPageInfo , removeByHid, getFindHeadlineByHid, saveOrAddNews } from "../../api/index"
  import { defineComponent } from 'vue'
   export default  defineComponent({
     name:'HeadlineNews'
@@ -288,10 +288,10 @@ watch(() => findNewsPageInfo.value, () => {
 // 初始化请求分页列表数据
 const getPageList = async () => {
   let result = await getfindNewsPageInfo(findNewsPageInfo.value)
-  pageData.value = result.pageInfo.pageData
- findNewsPageInfo.value.pageNum = result.pageInfo.pageNum
- findNewsPageInfo.value.pageSize = result.pageInfo.pageSize
- totalSize.value = +result.pageInfo.totalSize
+  pageData.value = result.pageData
+  findNewsPageInfo.value.pageNum = result.pageNum
+  findNewsPageInfo.value.pageSize = result.pageSize
+  totalSize.value = +result.totalSize
 }
 // 组件挂载的生命周期钩子
 onMounted(() => {
@@ -384,8 +384,6 @@ const handleSave = async () => {
   try {
     // 表单验证
     await formRef.value?.validate()
-    // 检查用户登录状态
-    await isUserOverdue()
     
     // 准备请求参数
     const params = {

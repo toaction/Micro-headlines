@@ -29,8 +29,8 @@ export const useUserInfoStore = defineStore('userInfo', {
     },
     async getInfo () {
       const result = await getUserInfo()
-      this.nickName = result.loginUser.nickName
-      this.uid = result.loginUser.uid
+      this.nickName = result.user.nickName
+      this.uid = result.user.uid
     },
     initUserInfo(){
       removeToken()

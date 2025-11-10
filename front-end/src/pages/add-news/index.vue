@@ -70,7 +70,7 @@ export default defineComponent({
 })
 </script>
 <script  setup>
-import { issueNews, isUserOverdue } from "../../api/index"
+import { issueNews } from "../../api/index"
 import { ref } from "vue"
 import { useRouter } from 'vue-router'
 const router = useRouter() 
@@ -145,8 +145,6 @@ const handlerCancel = () => {
 const handlerSave = async () => {
   try {
     await formRef.value?.validate()
-    //发送请求判断用户是否token过期
-    await isUserOverdue()
     //发送请求
     await issueNews(formData.value)
     ElMessage.success("发布成功")
