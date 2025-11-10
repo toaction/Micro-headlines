@@ -2,59 +2,53 @@ import request from "../utils/request/"
 
 //获取分类列表
 export const getfindAllTypes = () => {
-  return request.get("index/findAllNewsType");
+  return request.get("types");
 };
 // 分页带条件查询所有头条
 export const getfindNewsPageInfo = (info) => {
-  return request.post("index/findNewsPage",info);
+  return request.get("headlines/page", { params: info });
 };
 // 查看头条详情
 export const getshowHeadlineDetail = (id) => {
-  return request.get("index/showHeadlineDetail", { params: { hid: id } });
+  return request.get(`headlines/detail/${id}`);
 };
 
 //删除的回调
-// headline/removeByHid
 export const removeByHid = (id) => {
-  return request.post("headline/removeByHid", null, { params: { hid: id } });
+  return request.delete(`headlines/${id}`);
 };
 
 //登录的接口
 export const getLogin = (info) => {
-  return request.post("user/login",info);
+  return request.post("users/login", info);
 };
 //获取用户信息的接口
 export const getUserInfo = (info) => {
-  return request.get("user/getUserInfo");
+  return request.get("users/info");
 };
 
-//注册校验的接口  user/checkUserName
+//注册校验的接口
 export const registerValidateApi = (username) => {
-  return request.get("user/checkUserName", { params: { username } });
+  return request.get(`users/check/${username}`);
 };
 
 // 注册的接口
 export const registerApi = (userInfo) => {
-  return request.post("user/register",userInfo)
-}
-//判断用户登录过期的接口
-export const isUserOverdue = () => {
-  return request.get("user/checkLogin")
+  return request.post("users", userInfo)
 }
 
 // 修改头条回显的接口
 export const getFindHeadlineByHid = (id) => {
-  return request.get("headline/findHeadlineByHid", { params: { hid: id } });
+  return request.get(`headlines/${id}`);
 };
 
 //点击保存修改的回调
-// headline/update
 export const saveOrAddNews = (news) => {
-  return request.post("headline/update",news)
+  return request.put("headlines", news)
 }
 
-// headline/publish
+// 发布头条
 export const issueNews = (news) => {
-  return request.post("headline/publish",news)
+  return request.post("headlines", news)
 }
 
