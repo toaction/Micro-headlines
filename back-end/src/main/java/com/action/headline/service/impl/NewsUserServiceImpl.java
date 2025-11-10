@@ -1,14 +1,19 @@
 package com.action.headline.service.impl;
 
+import com.action.headline.common.Code;
 import com.action.headline.dao.NewsUserDao;
-import com.action.headline.dao.impl.NewsUserDaoImpl;
 import com.action.headline.entity.NewsUser;
+import com.action.headline.exception.BusinessException;
 import com.action.headline.service.NewsUserService;
 import com.action.headline.util.MD5Util;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NewsUserServiceImpl implements NewsUserService {
 
-    private NewsUserDao userDao = new NewsUserDaoImpl();
+    @Autowired
+    private NewsUserDao userDao;
 
     @Override
     public NewsUser findByUsername(String username) {
@@ -21,8 +26,14 @@ public class NewsUserServiceImpl implements NewsUserService {
     }
 
     @Override
-    public Integer registerUser(NewsUser registerUser) {
+    public boolean register(NewsUser registerUser) {
+        // 密码加密
         registerUser.setUserPwd(MD5Util.encrypt(registerUser.getUserPwd()));
-        return userDao.insertUser(registerUser);
+        try {
+            userDao.add(registerUser);
+        }catch (Exception e) {
+            throw new BusinessException("用户注册失败", Code.REGISTER_ERROR);
+        }
+        return true;
     }
 }

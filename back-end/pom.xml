@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring.version>6.2.11</spring.version>
+        <spring.version>5.2.10.RELEASE</spring.version>
         <servlet.version>4.0.1</servlet.version>
         <jackson.version>2.13.3</jackson.version>
         <mybatis.version>3.5.11</mybatis.version>
@@ -26,6 +26,8 @@
         <mysql.version>8.0.30</mysql.version>
         <junit.version>4.13.2</junit.version>
         <lombok.version>1.18.30</lombok.version>
+        <jwt.version>4.5.0</jwt.version>
+        <tomcat.version>9.0.95</tomcat.version>
     </properties>
 
     <dependencies>
@@ -87,7 +89,11 @@
         </dependency>
 
         <!-- JWT 依赖 -->
-
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
 
         <!-- Servlet API -->
         <dependency>
@@ -138,14 +144,22 @@
                 </configuration>
             </plugin>
 
-            <!-- Tomcat Maven 插件 (用于本地测试) -->
+            <!-- Cargo Maven 插件 - 支持 Tomcat 9 -->
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>1.10.10</version>
                 <configuration>
-                    <port>8080</port>
-                    <path>/</path>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                        <type>embedded</type>
+                    </container>
+                    <configuration>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.servlet.contextPath>/</cargo.servlet.contextPath>
+                        </properties>
+                    </configuration>
                 </configuration>
             </plugin>
         </plugins>

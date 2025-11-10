@@ -4,35 +4,34 @@ package com.action.headline.common;
  * 全局统一返回结果类
  *
  */
-public class Result<T> {
+public class Result {
 
     private Integer code;
     private String message;
-    private T data;
+    private Object data;
 
     public Result() {
     }
 
-    protected static <T> Result<T> build(T data) {
-        Result<T> result = new Result<T>();
-        if (data != null)
-            result.setData(data);
-        return result;
+    public Result(Integer code, String message, Object data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
     }
 
-    public static <T> Result<T> build(T body, Integer code, String message) {
-        Result<T> result = build(body);
-        result.setCode(code);
-        result.setMessage(message);
-        return result;
+    public Result(Integer code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public static <T> Result<T> build(T body, ResultCodeEnum resultCodeEnum) {
-        Result<T> result = build(body);
-        result.setCode(resultCodeEnum.getCode());
-        result.setMessage(resultCodeEnum.getMessage());
-        return result;
+    public static Result ok(Object data) {
+        return new Result(Code.SUCCESS, "success", data);
     }
+
+    public static Result error(int code, String message) {
+        return new Result(code, message);
+    }
+
 
     public Integer getCode() {
         return code;
@@ -50,15 +49,11 @@ public class Result<T> {
         this.message = message;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Object data) {
         this.data = data;
-    }
-
-    public static <T> Result<T> ok(T data) {
-        return build(data, ResultCodeEnum.SUCCESS);
     }
 }

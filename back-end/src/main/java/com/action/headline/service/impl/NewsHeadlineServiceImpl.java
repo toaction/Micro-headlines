@@ -1,19 +1,25 @@
 package com.action.headline.service.impl;
 
+import com.action.headline.common.Code;
 import com.action.headline.dao.NewsHeadlineDao;
-import com.action.headline.dao.impl.NewsHeadlineDaoImpl;
 import com.action.headline.entity.NewsHeadline;
 import com.action.headline.entity.vo.HeadlineDetailVo;
 import com.action.headline.entity.vo.HeadlinePageVo;
 import com.action.headline.entity.vo.HeadlineQueryVo;
+import com.action.headline.exception.SystemException;
 import com.action.headline.service.NewsHeadlineService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class NewsHeadlineServiceImpl implements NewsHeadlineService {
-    private NewsHeadlineDao headlineDao = new NewsHeadlineDaoImpl();
+
+    @Autowired
+    private NewsHeadlineDao headlineDao;
 
 
     /**
@@ -44,8 +50,13 @@ public class NewsHeadlineServiceImpl implements NewsHeadlineService {
     }
 
     @Override
-    public int addNewsHeadline(NewsHeadline newsHeadline) {
-        return headlineDao.addNewsHeadline(newsHeadline);
+    public boolean add(NewsHeadline newsHeadline) {
+        try {
+            headlineDao.add(newsHeadline);
+        }catch (Exception e) {
+            throw new SystemException("添加新闻失败", Code.HEADLINE_ADD_ERROR);
+        }
+        return true;
     }
 
     @Override
@@ -54,12 +65,22 @@ public class NewsHeadlineServiceImpl implements NewsHeadlineService {
     }
 
     @Override
-    public int update(NewsHeadline newsHeadline) {
-        return headlineDao.update(newsHeadline);
+    public boolean update(NewsHeadline newsHeadline) {
+        try {
+            headlineDao.update(newsHeadline);
+        }catch (Exception e) {
+            throw new SystemException("修改新闻失败", Code.HEADLINE_UPDATE_ERROR);
+        }
+        return true;
     }
 
     @Override
-    public int removeByHid(int hid) {
-        return headlineDao.removeByHid(hid);
+    public boolean removeByHid(int hid) {
+        try {
+            headlineDao.removeByHid(hid);
+        }catch (Exception e) {
+            throw new SystemException("删除新闻失败", Code.HEADLINE_DELETE_ERROR);
+        }
+        return true;
     }
 }

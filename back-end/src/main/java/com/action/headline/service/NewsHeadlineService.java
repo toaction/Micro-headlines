@@ -3,8 +3,11 @@ package com.action.headline.service;
 import com.action.headline.entity.NewsHeadline;
 import com.action.headline.entity.vo.HeadlineDetailVo;
 import com.action.headline.entity.vo.HeadlineQueryVo;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+
 
 public interface NewsHeadlineService {
     /**
@@ -15,12 +18,13 @@ public interface NewsHeadlineService {
     /**
      * 查询头条详情
      */
+    @Transactional
     HeadlineDetailVo findHeadlineDetail(int hid);
 
     /**
      * 添加头条
      */
-    int addNewsHeadline(NewsHeadline newsHeadline);
+    boolean add(NewsHeadline newsHeadline);
 
     /**
      * 查询头条
@@ -30,11 +34,11 @@ public interface NewsHeadlineService {
     /**
      * 修改头条
      */
-    int update(NewsHeadline newsHeadline);
+    boolean update(NewsHeadline newsHeadline);
 
 
     /**
      * 删除头条
      */
-    int removeByHid(int hid);
+    boolean removeByHid(int hid);
 }

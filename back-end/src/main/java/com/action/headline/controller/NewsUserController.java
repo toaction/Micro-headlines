@@ -1,116 +1,94 @@
 package com.action.headline.controller;
 
+import com.action.headline.common.Code;
 import com.action.headline.common.Result;
-import com.action.headline.common.ResultCodeEnum;
 import com.action.headline.entity.NewsUser;
+import com.action.headline.exception.BusinessException;
 import com.action.headline.service.NewsUserService;
-import com.action.headline.service.impl.NewsUserServiceImpl;
 import com.action.headline.util.JwtUtil;
 import com.action.headline.util.MD5Util;
-import com.action.headline.util.WebUtil;
+import com.action.headline.util.ThreadLocalUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/user/*")
-public class NewsUserController extends BaseController {
+@RestController
+@RequestMapping("/users")
+public class NewsUserController {
 
 
-    private NewsUserService userService = new NewsUserServiceImpl();
-
+    @Autowired
+    private NewsUserService userService;
 
     /**
-     * 校验用户名是否已存在
+     * 检查用户名是否已存在
+     * @param username
+     * @return
      */
-    protected void checkUserName(HttpServletRequest req, HttpServletResponse resp) {
-        String username = req.getParameter("username");
+    @GetMapping("/check/{username}")
+    public Result checkUserName(@PathVariable String username) {
         NewsUser newsUser = userService.findByUsername(username);
-
-        Result<Object> result = Result.ok(null);
-        if (null != newsUser) {
-            result = Result.build(null, ResultCodeEnum.USERNAME_USED);
+        if (newsUser != null) {
+            return Result.error(Code.USERNAME_USED, "用户名已存在");
         }
+        return Result.ok(null);
+    }
 
-        WebUtil.writeJson(resp, result);
+    /**
+     * 根据 uid 获取用户信息
+     * @return
+     */
+    @GetMapping("/info")
+    public Result getUserInfo() {
+        int userId = ThreadLocalUtil.getUserId();
+        NewsUser user = userService.findByUid(userId);
+        if (user != null) {
+            Map<Object, Object> data = new HashMap<>();
+            user.setUserPwd(null);
+            data.put("user", user);
+            return Result.ok(data);
+        }
+        return Result.error(Code.USER_NOT_EXIST, "用户不存在");
     }
 
     /**
      * 用户登录
-     * 前端请求体携带 username、userPwd
-     * 返回结果：JWT 令牌
+     * @param loginUser
+     * @return
      */
-    protected void login(HttpServletRequest req, HttpServletResponse resp) {
-        NewsUser loginUser = WebUtil.readJson(req, NewsUser.class);
+    @GetMapping("/login")
+    public Result login(@RequestBody NewsUser loginUser) {
         if (loginUser == null) {
-            WebUtil.writeJson(resp, Result.build(null, ResultCodeEnum.PARAM_ERROR));
-            return;
+            throw new BusinessException("用户登录参数不能为空", Code.REQUEST_ERROR);
         }
 
         NewsUser user = userService.findByUsername(loginUser.getUsername());
-        Result<Object> result = Result.build(null, ResultCodeEnum.USERNAME_OR_PASSWORD_ERROR);
-
+        Result result = Result.error(Code.USERNAME_OR_PASSWORD_ERROR, "用户名或密码错误");
+        // 验证用户名密码
         if (user != null && MD5Util.encrypt(loginUser.getUserPwd()).equalsIgnoreCase(user.getUserPwd())) {
             Map<Object, Object> data = new HashMap<>();
             data.put("token", JwtUtil.createToken(user.getUid()));
             result = Result.ok(data);
         }
 
-        WebUtil.writeJson(resp, result);
+        return result;
     }
 
 
     /**
      * 用户注册
+     * @param registerUser
+     * @return
      */
-    protected void register(HttpServletRequest req, HttpServletResponse resp) {
-        NewsUser registerUser = WebUtil.readJson(req, NewsUser.class);
-
-        Integer rows = userService.registerUser(registerUser);
-        Result<Object> result = Result.ok(null);
-
-        if (rows == 0) {
-            result = Result.build(null, ResultCodeEnum.USERNAME_USED);
+    @PostMapping
+    public Result register(@RequestBody NewsUser registerUser) {
+        if (registerUser == null) {
+            throw new BusinessException("用户注册参数不能为空", Code.REQUEST_ERROR);
         }
 
-        WebUtil.writeJson(resp, result);
-    }
-
-    /**
-     * 前端校验是否已登录
-     */
-    protected void checkLogin(HttpServletRequest req, HttpServletResponse resp) {
-        String token = req.getHeader("token");
-
-        Result<Object> result = Result.build(null, ResultCodeEnum.NOT_LOGIN);
-        if (token != null && JwtUtil.validateToken(token)) {
-            result = Result.ok(null);
-        }
-
-        WebUtil.writeJson(resp, result);
-    }
-
-
-    /**
-     * 获取用户信息
-     */
-    protected void getUserInfo(HttpServletRequest req, HttpServletResponse resp) {
-        String token = req.getHeader("token");
-        Result<Object> result = Result.build(null, ResultCodeEnum.NOT_LOGIN);
-
-        if (token != null && JwtUtil.validateToken(token)) {
-            Integer userId = JwtUtil.getUserId(token);
-            NewsUser newsUser = userService.findByUid(userId);
-            if (null != newsUser) {
-                Map<Object, Object> data = new HashMap<>();
-                newsUser.setUserPwd(null);
-                data.put("loginUser", newsUser);
-                result = Result.ok(data);
-            }
-        }
-
-        WebUtil.writeJson(resp, result);
+        userService.register(registerUser);
+        return Result.ok(null);
     }
 }

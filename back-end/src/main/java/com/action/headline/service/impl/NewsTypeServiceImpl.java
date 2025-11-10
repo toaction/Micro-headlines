@@ -1,14 +1,18 @@
 package com.action.headline.service.impl;
 
 import com.action.headline.dao.NewsTypeDao;
-import com.action.headline.dao.impl.NewsTypeDaoImpl;
 import com.action.headline.entity.NewsType;
 import com.action.headline.service.NewsTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class NewsTypeServiceImpl implements NewsTypeService {
-    private NewsTypeDao typeDao = new NewsTypeDaoImpl();
+
+    @Autowired
+    private NewsTypeDao typeDao;
 
     @Override
     public List<NewsType> findAll() {

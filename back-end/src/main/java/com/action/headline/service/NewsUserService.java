@@ -16,5 +16,5 @@ public interface NewsUserService {
     /**
      * 注册用户
      */
-    Integer registerUser(NewsUser registerUser);
+    boolean register(NewsUser registerUser);
 }
