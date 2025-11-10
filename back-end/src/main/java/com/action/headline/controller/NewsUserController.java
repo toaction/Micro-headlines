@@ -58,7 +58,7 @@ public class NewsUserController {
      * @param loginUser
      * @return
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public Result login(@RequestBody NewsUser loginUser) {
         if (loginUser == null) {
             throw new BusinessException("用户登录参数不能为空", Code.REQUEST_ERROR);

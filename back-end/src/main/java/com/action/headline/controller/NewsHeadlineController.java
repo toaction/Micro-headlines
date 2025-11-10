@@ -91,11 +91,20 @@ public class NewsHeadlineController {
 
     /**
      * 分页查询
-     * @param headlineQueryVo
      * @return
      */
     @GetMapping("/page")
-    public Result findPage(@RequestBody HeadlineQueryVo headlineQueryVo) {
+    public Result findPage(
+        @RequestParam(required = false, defaultValue = "") String keyWords,
+        @RequestParam(required = false, defaultValue = "0") Integer type,
+        @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+        @RequestParam(required = false, defaultValue = "5") Integer pageSize) {
+        HeadlineQueryVo headlineQueryVo = new HeadlineQueryVo();
+        headlineQueryVo.setKeyWords(keyWords);
+        headlineQueryVo.setType(type);
+        headlineQueryVo.setPageNum(pageNum);
+        headlineQueryVo.setPageSize(pageSize);
+
         Map<Object, Object> data = headlineService.findPage(headlineQueryVo);
         return Result.ok(data);
     }

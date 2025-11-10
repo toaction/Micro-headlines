@@ -20,7 +20,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/users/info", "/headlines/*")
+                .addPathPatterns("/users/info", "/headlines/**")
                 .excludePathPatterns("/headlines/page", "/headlines/detail/*");
     }
 }

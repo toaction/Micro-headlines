@@ -6,6 +6,10 @@ Java web practice project.
 
 Source: https://www.bilibili.com/video/BV1UN411x7xe
 
+Course: 
+- https://www.bilibili.com/video/BV1UN411x7xe
+- https://www.bilibili.com/video/BV1Fi4y1S7ix
+
 ## Architecture
 
 MVC architecture, front and back are separated.
@@ -18,7 +22,7 @@ sequenceDiagram
     end
     
     box rgb(255, 250, 240) Controller Layer
-    participant F as Filter
+    participant I as Interceptor
     participant C as Controller
     end
     
@@ -30,12 +34,12 @@ sequenceDiagram
     
     participant DB as MySQL Database
     
-    V->>F: HTTP Request
-    F->>C: Route Dispatch
+    V->>I: HTTP Request
+    I->>C: Route Dispatch
     C->>S: Call Business Logic
     S->>D: Call Data Access
     D->>E: Object Mapping
-    D->>DB: Execute SQL via JDBC
+    D->>DB: Execute SQL via MyBatis
     
     DB-->>D: Return Data
     D-->>S: Return Entity
@@ -43,16 +47,17 @@ sequenceDiagram
     C-->>V: JSON Response
 ```
 
-Tech stack: Java Servlet, MySQL, JDBC, Vue.js.
+**Tech stack**: Vue.js, Spring, SpringMVC, MyBatis, MySQL
 
 ## How to run
 
 ### Dependencies
 
-- [Node.js 20.19+](https://nodejs.org/)
-- [JDK 1.8+](https://www.oracle.com/java)
-- [MySQL 8.0+](https://www.mysql.com/)
+- [Node.js 22](https://nodejs.org/)
+- [JDK 1.8](https://www.oracle.com/java)
+- [MySQL 8](https://www.mysql.com/)
 - [Tomcat 9](https://tomcat.apache.org/)
+- [Maven 3.9](https://maven.apache.org/)
 
 ### Local
 
@@ -92,7 +97,7 @@ sh startup.sh
 
 [Ubuntu](./docs/ubuntu.md)
 
-## API Documentation
+## API
 - [API Documentation](./docs/api.md)
 
 ## Thanks

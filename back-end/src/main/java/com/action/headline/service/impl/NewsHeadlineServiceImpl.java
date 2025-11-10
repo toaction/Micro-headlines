@@ -8,6 +8,7 @@ import com.action.headline.entity.vo.HeadlinePageVo;
 import com.action.headline.entity.vo.HeadlineQueryVo;
 import com.action.headline.exception.SystemException;
 import com.action.headline.service.NewsHeadlineService;
+import com.action.headline.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,8 @@ public class NewsHeadlineServiceImpl implements NewsHeadlineService {
     @Override
     public boolean add(NewsHeadline newsHeadline) {
         try {
+            int uid = ThreadLocalUtil.getUserId();
+            newsHeadline.setPublisher(uid);
             headlineDao.add(newsHeadline);
         }catch (Exception e) {
             throw new SystemException("添加新闻失败", Code.HEADLINE_ADD_ERROR);
